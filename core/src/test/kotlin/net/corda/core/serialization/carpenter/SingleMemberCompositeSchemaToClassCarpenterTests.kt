@@ -1,9 +1,10 @@
-package net.corda.carpenter
+package net.corda.core.serialization.carpenter
 
-import net.corda.carpenter.test.AmqpCarpenterBase
+import net.corda.core.serialization.carpenter.test.AmqpCarpenterBase
+import net.corda.core.serialization.carpenter.CarpenterSchemas
 import net.corda.core.serialization.CordaSerializable
 import net.corda.core.serialization.amqp.*
-import net.corda.core.serialization.carpenter.CarpenterSchemas
+
 import org.junit.Test
 import kotlin.test.assertEquals
 

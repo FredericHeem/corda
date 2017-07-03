@@ -1,10 +1,11 @@
-package net.corda.carpenter
+package net.corda.core.serialization.carpenter
 
 import net.corda.core.serialization.CordaSerializable
+import net.corda.core.serialization.carpenter.MetaCarpenter
+import net.corda.core.serialization.carpenter.test.*
 import net.corda.core.serialization.amqp.*
+
 import org.junit.Test
-import net.corda.carpenter.test.*
-import net.corda.carpenter.MetaCarpenter
 import kotlin.test.*
 
 /*******************************************************************************************************/
@@ -77,7 +78,7 @@ class InheritanceSchemaToClassCarpenterTests : AmqpCarpenterBase() {
 
         assertEquals(curruptName(classTestName("A")), aSchema!!.name)
         assertEquals(1, aSchema.interfaces.size)
-        assertEquals(net.corda.carpenter.J::class.java, aSchema.interfaces[0])
+        assertEquals(net.corda.core.serialization.carpenter.J::class.java, aSchema.interfaces[0])
 
         val aBuilder = ClassCarpenter().build(aSchema)
 
@@ -128,7 +129,7 @@ class InheritanceSchemaToClassCarpenterTests : AmqpCarpenterBase() {
 
         assertEquals(aName, aSchema!!.name)
         assertEquals(1, aSchema.interfaces.size)
-        assertEquals(net.corda.carpenter.J::class.java, aSchema.interfaces[0])
+        assertEquals(net.corda.core.serialization.carpenter.J::class.java, aSchema.interfaces[0])
 
         val aBuilder = ClassCarpenter().build(aSchema)
 
@@ -178,8 +179,8 @@ class InheritanceSchemaToClassCarpenterTests : AmqpCarpenterBase() {
 
         assertEquals(aName, aSchema!!.name)
         assertEquals(2, aSchema.interfaces.size)
-        assert(net.corda.carpenter.I::class.java in aSchema.interfaces)
-        assert(net.corda.carpenter.II::class.java in aSchema.interfaces)
+        assert(net.corda.core.serialization.carpenter.I::class.java in aSchema.interfaces)
+        assert(net.corda.core.serialization.carpenter.II::class.java in aSchema.interfaces)
 
         val aBuilder = ClassCarpenter().build(aSchema)
 
@@ -228,8 +229,8 @@ class InheritanceSchemaToClassCarpenterTests : AmqpCarpenterBase() {
 
         assertEquals(aName, aSchema!!.name)
         assertEquals(2, aSchema.interfaces.size)
-        assert(net.corda.carpenter.I::class.java in aSchema.interfaces)
-        assert(net.corda.carpenter.III::class.java in aSchema.interfaces)
+        assert(net.corda.core.serialization.carpenter.I::class.java in aSchema.interfaces)
+        assert(net.corda.core.serialization.carpenter.III::class.java in aSchema.interfaces)
 
         val aBuilder = ClassCarpenter().build(aSchema)
 

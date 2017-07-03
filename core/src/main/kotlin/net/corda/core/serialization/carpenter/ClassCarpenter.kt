@@ -1,4 +1,4 @@
-package net.corda.carpenter
+package net.corda.core.serialization.carpenter
 
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.MethodVisitor

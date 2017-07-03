@@ -1,11 +1,11 @@
-package net.corda.carpenter
+package net.corda.core.serialization.carpenter
 
+import net.corda.core.serialization.carpenter.test.*
 import net.corda.core.serialization.CordaSerializable
 import net.corda.core.serialization.amqp.*
 
 import org.junit.Test
 import kotlin.test.assertEquals
-import net.corda.carpenter.test.*
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
