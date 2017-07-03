@@ -25,14 +25,13 @@ import rx.Observable;
 
 import java.io.*;
 import java.lang.reflect.*;
-import java.security.*;
 import java.util.*;
 import java.util.stream.*;
 
 import static net.corda.contracts.asset.CashKt.*;
 import static net.corda.contracts.testing.VaultFiller.*;
 import static net.corda.core.node.services.vault.QueryCriteriaKt.*;
-import static net.corda.core.node.services.vault.QueryCriteriaUtilsKt.*;
+import static net.corda.core.node.services.vault.QueryCriteriaUtils.*;
 import static net.corda.core.utilities.TestConstants.*;
 import static net.corda.node.utilities.DatabaseSupportKt.*;
 import static net.corda.node.utilities.DatabaseSupportKt.transaction;
