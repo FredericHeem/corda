@@ -383,6 +383,7 @@ public class VaultQueryJavaTests {
             fillWithSomeTestCash(services, swissfrancs, getDUMMY_NOTARY(), 5, 5, new Random(0L), new OpaqueBytes("1".getBytes()), null, getDUMMY_CASH_ISSUER(), getDUMMY_CASH_ISSUER_KEY());
 
             try {
+                // DOCSTART VaultJavaQueryExample21
                 Field pennies = CashSchemaV1.PersistentCashState.class.getDeclaredField("pennies");
 
                 QueryCriteria sumCriteria = new VaultCustomQueryCriteria(Builder.INSTANCE.sum(pennies));
@@ -393,6 +394,7 @@ public class VaultQueryJavaTests {
 
                 QueryCriteria criteria = QueryCriteriaKt.and(QueryCriteriaKt.and(QueryCriteriaKt.and(QueryCriteriaKt.and(sumCriteria, countCriteria), maxCriteria), minCriteria), avgCriteria);
                 Vault.Page<Cash.State> results = vaultQuerySvc.queryBy(Cash.State.class, criteria);
+                // DOCEND VaultJavaQueryExample21
 
                 assertThat(results.getOtherResults()).hasSize(5);
                 assertThat(results.getOtherResults().get(0)).isEqualTo(1500L);
@@ -425,6 +427,7 @@ public class VaultQueryJavaTests {
             fillWithSomeTestCash(services, swissfrancs, getDUMMY_NOTARY(), 5, 5, new Random(0L), new OpaqueBytes("1".getBytes()), null, getDUMMY_CASH_ISSUER(), getDUMMY_CASH_ISSUER_KEY());
 
             try {
+                // DOCSTART VaultJavaQueryExample22
                 Field pennies = CashSchemaV1.PersistentCashState.class.getDeclaredField("pennies");
                 Field currency = CashSchemaV1.PersistentCashState.class.getDeclaredField("currency");
 
@@ -436,6 +439,7 @@ public class VaultQueryJavaTests {
 
                 QueryCriteria criteria = QueryCriteriaKt.and(QueryCriteriaKt.and(QueryCriteriaKt.and(QueryCriteriaKt.and(sumCriteria, countCriteria), maxCriteria), minCriteria), avgCriteria);
                 Vault.Page<Cash.State> results = vaultQuerySvc.queryBy(Cash.State.class, criteria);
+                // DOCEND VaultJavaQueryExample22
 
                 assertThat(results.getOtherResults()).hasSize(27);
                 /** CHF */
@@ -491,6 +495,7 @@ public class VaultQueryJavaTests {
             fillWithSomeTestCash(services, pounds400, getDUMMY_NOTARY(), 4, 4, new Random(0L), new OpaqueBytes("1".getBytes()), null, getBOC().ref(new OpaqueBytes("1".getBytes())), getBOC_KEY());
 
             try {
+                // DOCSTART VaultJavaQueryExample23
                 Field pennies = CashSchemaV1.PersistentCashState.class.getDeclaredField("pennies");
                 Field currency = CashSchemaV1.PersistentCashState.class.getDeclaredField("currency");
                 Field issuerParty = CashSchemaV1.PersistentCashState.class.getDeclaredField("issuerParty");
@@ -498,6 +503,8 @@ public class VaultQueryJavaTests {
                 QueryCriteria sumCriteria = new VaultCustomQueryCriteria(Builder.INSTANCE.sum(pennies, Arrays.asList(issuerParty, currency), Sort.Direction.DESC));
 
                 Vault.Page<Cash.State> results = vaultQuerySvc.queryBy(Cash.State.class, sumCriteria);
+                // DOCEND VaultJavaQueryExample23
+
                 assertThat(results.getOtherResults()).hasSize(12);
 
                 assertThat(results.getOtherResults().get(0)).isEqualTo(400L);
