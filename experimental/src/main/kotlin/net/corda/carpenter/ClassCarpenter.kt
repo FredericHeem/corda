@@ -191,8 +191,15 @@ class ClassCarpenter {
     }
 
     private fun ClassWriter.generateFields(schema: Schema) {
+
         for ((name, desc) in schema.descriptors) {
-            visitField(ACC_PROTECTED + ACC_FINAL, name, desc, null, null).visitEnd()
+            val fieldVisitor = visitField(ACC_PROTECTED + ACC_FINAL, name, desc, null, null)
+
+            if(schema.fields[name]!!.isArray) {
+                visitAnnotation("org/jetbrains/annotations/NotNull", false).visitEnd()
+            }
+
+            fieldVisitor.visitEnd()
         }
     }
 
@@ -267,23 +274,24 @@ class ClassCarpenter {
     }
 
     private fun ClassWriter.generateConstructor(schema: Schema) {
-        with(visitMethod(ACC_PUBLIC, "<init>", "(" + schema.descriptorsIncludingSuperclasses().values.joinToString("") + ")V", null, null)) {
-            visitCode()
+        with(visitMethod(
+                ACC_PUBLIC,
+                "<init>",
+                "(" + schema.descriptorsIncludingSuperclasses().values.joinToString("") + ")V",
+                null,
+                null))
+        {
+            var idx = 0
+            schema.fields.forEach {
+                visitParameter(it.key, 0)
 
-
-            for ((name, type) in schema.fields.entries) {
-                if (type.isArray) {
-                    /* assert we're not being passed a null object, this means we'll throw an illegal
-                       argument exception if we're given a null rather than a Type Cast exception */
-                    visitVarInsn(ALOAD, 1)
-                    visitLdcInsn(name)
-                    visitMethodInsn(INVOKESTATIC,
-                            "kotlin/jvm/internal/Intrinsics",
-                            "checkParameterIsNotNull",
-                            "(Ljava/lang/Object;Ljava/lang/String;)V", false)
-
+                if(it.value.isArray) {
+                    visitParameterAnnotation(idx, "Lorg/jetbrains/annotations/NotNull", false).visitEnd()
                 }
+                idx++
             }
+
+            visitCode()
 
             // Calculate the super call.
             val superclassFields = schema.superclass?.fieldsIncludingSuperclasses() ?: emptyMap()
@@ -303,8 +311,7 @@ class ClassCarpenter {
 
             for ((name, type) in schema.fields.entries) {
                 if (type.isArray) {
-                    /* assert we're not being passed a null object, this means we'll throw an illegal
-                       argument exception if we're given a null rather than a Type Cast exception */
+                    /* we can't construct objects with nullable types so explicitly assert we're not given one */
                     visitVarInsn(ALOAD, slot)
                     visitLdcInsn(name)
                     visitMethodInsn(INVOKESTATIC,
@@ -323,7 +330,6 @@ class ClassCarpenter {
         }
     }
 
-    // Returns how many slots the given type takes up.
     private fun MethodVisitor.load(slot: Int, type: Class<out Any?>): Int {
         when (type) {
             java.lang.Boolean.TYPE, Integer.TYPE, java.lang.Short.TYPE, java.lang.Byte.TYPE, TYPE -> visitVarInsn(ILOAD, slot)

@@ -223,7 +223,7 @@ class ClassCarpenterTest {
     }
 
     @Test(expected = java.lang.IllegalArgumentException::class)
-    fun `null parameter`() {
+    fun `null parameter small int`() {
         val className = "iEnjoySwede"
         val schema = ClassCarpenter.ClassSchema(
                 "gen.$className",
@@ -233,6 +233,21 @@ class ClassCarpenterTest {
 
         val a : Int? = null
         clazz.constructors[0].newInstance(a)
+    }
+
+    @Test
+    fun `null parameter Integer`() {
+        val className = "iEnjoySwede"
+        val schema = ClassCarpenter.ClassSchema(
+                "gen.$className",
+                mapOf("a" to Integer::class.java))
+
+        val clazz = cc.build(schema)
+
+        val a : Int? = null
+        val i = clazz.constructors[0].newInstance(a)
+        val a2 = clazz.getMethod("getA").invoke(i)
+        assertEquals (null, a2)
     }
 
     @Test
@@ -255,8 +270,7 @@ class ClassCarpenterTest {
         assertEquals("$className{a=[1, 2, 3]}", i.toString())
     }
 
-    //@Test(expected = java.lang.reflect.InvocationTargetException::class)
-    @Test(expected = java.lang.IllegalArgumentException::class)
+    @Test(expected = java.lang.reflect.InvocationTargetException::class)
     fun `nullable int array throws`() {
         val className = "iEnjoySwede"
         val schema = ClassCarpenter.ClassSchema(
