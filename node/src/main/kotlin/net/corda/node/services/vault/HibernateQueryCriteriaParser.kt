@@ -162,6 +162,7 @@ class HibernateQueryCriteriaParser(val contractType: Class<out ContractState>,
 
     private fun <O, R> parseAggregateFunctionExpression(root: Root<O>, expression: CriteriaExpression<O, R>) {
         if (expression is CriteriaExpression.AggregateFunctionExpression<O,*>) {
+            val orderCriteria = mutableListOf<Order>()
             val column = root.get<Any?>(getColumnName(expression.column))
             val columnPredicate = expression.predicate
             when (columnPredicate) {
@@ -176,6 +177,14 @@ class HibernateQueryCriteriaParser(val contractType: Class<out ContractState>,
                             AggregateFunctionType.MIN -> criteriaBuilder.min(column)
                         }
                     aggregateExpressions.add(aggregateExpression)
+
+                    // optionally order by this aggregate function
+                    expression.orderBy?.let {
+                        when (expression.orderBy!!) {
+                            Sort.Direction.ASC -> orderCriteria.add(criteriaBuilder.asc(aggregateExpression))
+                            Sort.Direction.DESC -> orderCriteria.add(criteriaBuilder.desc(aggregateExpression))
+                        }
+                    }
                 }
                 else -> throw VaultQueryException("Not expecting $columnPredicate")
             }
@@ -188,6 +197,10 @@ class HibernateQueryCriteriaParser(val contractType: Class<out ContractState>,
                         path
                     }
                 criteriaQuery.groupBy(groupByExpressions)
+            }
+            // optionally, add order criteria
+            if (orderCriteria.isNotEmpty()) {
+                criteriaQuery.orderBy(orderCriteria)
             }
         }
     }
